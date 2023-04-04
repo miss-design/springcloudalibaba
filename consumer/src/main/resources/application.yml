@@ -3,4 +3,6 @@ server:
 provider:
   ribbon:
     NFLoadBalancerRuleClassName: com.soft.configuration.NacosWeightedRule
+rocketmq:
+  name-server: 192.168.200.128:9876
 

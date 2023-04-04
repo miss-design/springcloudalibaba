@@ -1,12 +1,16 @@
 package com.soft.controller;
 
 import com.alibaba.csp.sentinel.annotation.SentinelResource;
+import com.soft.entity.Order;
 import com.soft.service.ProviderService;
+import org.apache.rocketmq.spring.core.RocketMQTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Date;
 
 @RestController
 public class ProviderController {
@@ -47,5 +51,21 @@ public class ProviderController {
             @RequestParam(value = "num1",required = false) Integer num1,
             @RequestParam(value = "num2",required = false) Integer num2){
         return num1+"-"+num2;
+    }
+
+    @Autowired
+    private RocketMQTemplate rocketMQTemplate;
+
+    @GetMapping("/create")
+    public Order create(){
+        Order order = new Order(
+                1,
+                "张三",
+                "123123",
+                "软件园",
+                new Date()
+        );
+        this.rocketMQTemplate.convertAndSend("orderTopic",order);
+        return order;
     }
 }
